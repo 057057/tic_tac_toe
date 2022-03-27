@@ -1,31 +1,70 @@
 
-from random import randrange
-
 space_num=20
 board='_'*space_num
-player_mv=int(input('1-20 choose one number'))
-while player_mv>space_num:
-    print('you must choose within',space_num)
+
+def player_mv():
+    '''return player move and marked on board'''
+    global board
     player_mv=int(input('1-20 choose one number'))
-if player_mv<=space_num:
-   board=board[:player_mv-1]+board[player_mv-1].replace('_','X')+board[player_mv:]
-else:
-    print('be good ok?')
-print(board)
+    while player_mv>space_num or player_mv<1 or board[player_mv-1]!='_':
+        if player_mv>space_num or player_mv<1:
+          print('you must choose within 1-',space_num)
+          player_mv=int(input('1-20 choose one number'))
+        if board[player_mv-1]!='_':
+          print('This space has been occupied, please choose other number')
+          player_mv=int(input('1-20 choose one number'))
+    if board[player_mv-1]=='_':
+      board=board[:player_mv-1]+board[player_mv-1].replace('_','X')+board[player_mv:]
+    else:
+      print('be good ok?')
+    return board
+def display_board():
+    '''print current board with pc and play moves'''
+    print(board)
 
-pc_mv=randrange(1,space_num+1)
-while pc_mv==player_mv:
+def start_game():
+    '''initial a game'''
+    print("Let's start a game")
+    display_board()
+
+from random import randrange   
+def pc_mv():
+    '''return pc move and marked on board'''
+    global board
     pc_mv=randrange(1,space_num+1)
-if pc_mv!=player_mv:
-   board=board[:pc_mv-1]+board[pc_mv-1].replace('_','O')+board[pc_mv:]
-   print(board)
+    while board[pc_mv-1]!='_':
+        pc_mv=randrange(1,space_num+1)
+    if board[pc_mv-1]=='_':
+        board=board[:pc_mv-1]+board[pc_mv-1].replace('_','O')+board[pc_mv:]
+    return board
 
-for i in range(6):
+def play_game():
+    '''6 rounds of tictactoe game'''
+    for i in range (6):
+      player_mv()
+      if 'XXX' in board:
+        display_board()
+        print('player wins')
+        return
+      else:
+        pc_mv()
+        if 'OOO' in board:
+          display_board()
+          print('pc wins')
+          return
+        else:
+          display_board()
+    print('No one wins')
 
-space='_'*20
-m_x=int(input('1-5 choose one'))
-round_1_x=space[:m_x-1]+space[m_x-1].replace('_','X')+space[m_x:]
-print(round_1_x)
-m_o=int(input('1-5 choose one'))
-round_1_o=round_1_x[:m_o-1]+round_1_x[m_o-1].replace('_','O')+round_1_x[m_o:]
-print(round_1_o)
+start_game()
+while True:
+    play_game()
+    result=input('wanna play again?')
+    if result=='yes':
+      board='_'*space_num
+      display_board()
+    elif result=='no':
+      print('ok bye')
+      break
+    else:
+      print('please answer yes or no')

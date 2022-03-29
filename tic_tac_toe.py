@@ -39,22 +39,24 @@ def pc_mv():
     return board
 
 def play_game():
-    '''6 rounds of tictactoe game'''
-    for i in range (6):
+    '''define a winner from game'''
+    while True:
       player_mv()
       if 'XXX' in board:
         display_board()
         print('player wins')
-        return
+        return False
       else:
         pc_mv()
         if 'OOO' in board:
           display_board()
           print('pc wins')
-          return
+          return False
         else:
           display_board()
-    print('No one wins')
+          if '_' not in board:
+            print('No one wins')
+            return False
 
 start_game()
 while True:
